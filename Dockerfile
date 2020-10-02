@@ -23,56 +23,20 @@ RUN echo "**** install dev packages ****" && \
     rm miniconda.sh && \
     \
     echo "**** setup Miniconda ****" && \
-    conda update --all --yes
+    conda update --all -y && \
+    conda config --set auto_update_conda False && \
+    conda clean --all -y
 
+RUN echo "**** install analysis tools ****" && \
+    conda install -c bioconda -y \
+    trim-galore \
+    hisat2 \
+    samtools \
+    stringtie \
+    deeptools && \
+    \
+    cd "${CONDA_DIR}/lib" && \
+    ln -s libcrypto.so.1.1 libcrypto.so.1.0.0 && \
+    \
+    pip install multiqc
 CMD ["/bin/ash"]
-    # conda update --all --yes && \
-    # echo "export PATH=$CONDA_DIR/bin:\$PATH" > /etc/profile.d/conda.sh && \
-    # \
-    # echo "**** setup Miniconda ****" && \
-    # conda update --all --yes && \
-    # conda config --set auto_update_conda False && \
-    # \
-    # echo "**** cleanup ****" && \
-    # apk del --purge .build-dependencies && \
-    # rm -f miniconda.sh && \
-    # conda clean --all --force-pkgs-dirs --yes && \
-    # find "$CONDA_DIR" -follow -type f \( -iname '*.a' -o -iname '*.pyc' -o -iname '*.js.map' \) -delete && \
-    # \
-    # echo "**** finalize ****" && \
-    # mkdir -p "$CONDA_DIR/locks" && \
-    # chmod 777 "$CONDA_DIR/locks"
-# Alpine Linux ベース
-# FROM alpine:3.12.0
-# RUN apk update && \
-#     apk add wget bash
-# RUN mkdir -p opt/conda
-# RUN wget "http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O miniconda.sh
-
-# CMD ["/bin/ash"]
-
-
-
-# RUN apt-get update && apt-get install -y \
-# sudo 
-# wget \
-# git
-# WORKDIR /opt
-# RUN wget https://repo.continuum.io/archive/Anaconda3-2020.07-Linux-x86_64.sh && \
-#     sh Anaconda3-2020.07-Linux-x86_64.sh -b -p /opt/anaconda3 && \
-#     rm -f Anaconda3-2020.07-Linux-x86_64.sh
-# ENV PATH /opt/anaconda3/bin:$PATH
-# RUN  pip install --upgrade pip
-# WORKDIR /
-# RUN conda install -c bioconda -y \
-#     fastqc \
-#     trimmomatic \
-#     megahit \
-#     parallel \
-#     blast && \ 
-#     python3 -m pip install --user --upgrade cutadapt
-# RUN git clone https://github.com/LANL-Bioinformatics/FaQCs.git && \
-#     cd FaQCs && \
-#     make
-# ENV PATH /FaQCs:/root/.local/bin:$PATH
-# CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--LabApp.token=''"]
