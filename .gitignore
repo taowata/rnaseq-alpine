@@ -1,2 +1,4 @@
 work/*
 !scripts
+
+.DS_Store
