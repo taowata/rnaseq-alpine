@@ -1,0 +1,44 @@
+# from the image based on Alpine Linux image and contains glibc to enable Miniconda
+FROM frolvlad/alpine-glibc:alpine-3.12
+
+# Inspired by :
+# * https://github.com/Docker-Hub-frolvlad/docker-alpine-miniconda3
+# * https://github.com/datarevenue-berlin/alpine-miniconda
+
+ARG CONDA_VERSION="4.7.12.1"
+ARG CONDA_DIR="/opt/conda"
+
+ARG SALMON_VERSION="1.3.0"
+ARG SALMON_DIR="/tools/salmon-latest_linux_x86_64"
+
+ENV PATH="$SALMON_DIR/bin:$CONDA_DIR/bin:$PATH"
+
+# Install conda
+RUN echo "**** install dev packages ****" && \
+    apk add bash wget && \
+    \
+    echo "**** get Miniconda ****" && \
+    mkdir -p "$CONDA_DIR" && \
+    wget "http://repo.continuum.io/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh" -O miniconda.sh && \
+    \
+    echo "**** install Miniconda ****" && \
+    bash miniconda.sh -f -b -p "$CONDA_DIR" && \
+    rm miniconda.sh && \
+    \
+    echo "**** setup Miniconda ****" && \
+    conda update --all -y && \
+    conda config --set auto_update_conda False && \
+    conda clean --all -y
+
+# Install fastp, salmon and multiqc
+RUN echo "**** install analysis tools ****" && \
+    \
+    conda install -c bioconda -y fastp && \
+    \
+    wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMON_VERSION}/salmon-${SALMON_VERSION}_linux_x86_64.tar.gz -P tools && \
+    tar -zxvf tools/salmon-${SALMON_VERSION}_linux_x86_64.tar.gz -C tools && \
+    rm salmon-${SALMON_VERSION}_linux_x86_64.tar.gz && \
+    \
+    pip install multiqc
+
+CMD ["/bin/ash"]
