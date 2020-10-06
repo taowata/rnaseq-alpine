@@ -1,19 +1,31 @@
 #!/bin/bash
 
 readonly RESOURCES_DIR_PATH="/work/resources/"
-readonly FASTP_RESULTS_DIR_PATH="/work/results/fastp_results/"
+readonly RESULTS_DIR_PATH="/work/results/"
 readonly SCRIPTS_DIR_PATH="/work/scripts/salmon/"
 
 echo "**** create resources number array ****"
 resources_number_array=()
-for i in {1..6}
+
+for i in {7..9}
 do
     resources_number_array+=("00${i}-${i}")
 done
+
+for i in {10..12}
+do
+    resources_number_array+=("0${i}-${i}")
+done
+
 echo "**** resources ****"
 echo ${resources_number_array[@]}
 
-mkdir -p ${FASTP_RESULTS_DIR_PATH}
+# fastpで前処理
+readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
+# 出力先ディレクトリがあるかどうかチェック
+if [ -d FASTP_RESULTS_DIR_PATH ]; then
+else mkdir -p ${FASTP_RESULTS_DIR_PATH}
+fi
 
 for value in ${resources_number_array[@]}
 do
@@ -34,3 +46,26 @@ do
     -w 6
     echo "**** finish preproccess of sample: ${value} ****"
 done
+
+# salmonでリードカウント
+readonly SALMON_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}salmon_results/"
+# 出力先ディレクトリがあるかどうかチェック
+if [ -d SALMON_RESULTS_DIR_PATH ]; then
+else mkdir -p ${SALMON_RESULTS_DIR_PATH}
+fi
+
+for value in ${resources_number_array[@]}
+do
+    echo "**** quantify sample: ${value} ****"
+    salmon quant \
+    -i "${RESOURCES_DIR_PATH}transcripts_index_salmon" \
+    -p 6 \
+    -l A \
+    -1 "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R1.fq.gz" \
+    -2 "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R2.fq.gz" \
+    --validateMappings \
+    -o "${SALMON_RESULTS_DIR_PATH}salmon_output_${value}"
+done
+
+# 総合的なレポート出力
+multiqc .
