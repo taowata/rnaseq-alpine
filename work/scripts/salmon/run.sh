@@ -23,8 +23,11 @@ echo ${resources_number_array[@]}
 # fastpで前処理
 readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
 # 出力先ディレクトリがあるかどうかチェック
-if [ -d FASTP_RESULTS_DIR_PATH ]; then
-else mkdir -p ${FASTP_RESULTS_DIR_PATH}
+if [ -d ${FASTP_RESULTS_DIR_PATH} ]; then
+    echo "fastp出力用のディレクトリがすでに存在しています。"
+else
+    echo "fastp出力用のディレクトリが存在していないため、作成します。"
+    mkdir -p ${FASTP_RESULTS_DIR_PATH}
 fi
 
 for value in ${resources_number_array[@]}
@@ -50,8 +53,11 @@ done
 # salmonでリードカウント
 readonly SALMON_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}salmon_results/"
 # 出力先ディレクトリがあるかどうかチェック
-if [ -d SALMON_RESULTS_DIR_PATH ]; then
-else mkdir -p ${SALMON_RESULTS_DIR_PATH}
+if [ -d ${SALMON_RESULTS_DIR_PATH} ]; then
+    echo "salmon出力用のディレクトリがすでに存在しています。"
+else 
+    echo "salmon出力用のディレクトリが存在していないため、作成します。"
+    mkdir -p ${SALMON_RESULTS_DIR_PATH}
 fi
 
 for value in ${resources_number_array[@]}
