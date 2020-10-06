@@ -24,8 +24,8 @@ do
     -3 \
     -o "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R1.fq.gz" \
     -O "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R2.fq.gz" \
-    -h "${FASTP_RESULTS_DIR_PATH}trimreport_${value}.html" \
-    -j "${FASTP_RESULTS_DIR_PATH}report_${value}.json" \
+    -h "${FASTP_RESULTS_DIR_PATH}trimreport_${value}_fastp.html" \
+    -j "${FASTP_RESULTS_DIR_PATH}trimreport_${value}_fastp.json" \
     -q 15 \
     -n 10 \
     -t 1 \
