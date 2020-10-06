@@ -2,7 +2,6 @@
 
 # RNAseq解析の第一歩
 # アダプター配列のトリミングとクオリティチェック
-# -a　オプションでアダプター配列を指定
 read -p "Input read1 file name:" read1
 read -p "Input read2 file name:" read2
 # trim_galore --paired --fastqc "resources/${read1}" "resources/${read2}" -o trim_result/ -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA -a2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
