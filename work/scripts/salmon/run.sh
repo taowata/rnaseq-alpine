@@ -4,21 +4,15 @@ readonly RESOURCES_DIR_PATH="/work/resources/"
 readonly RESULTS_DIR_PATH="/work/results/"
 readonly SCRIPTS_DIR_PATH="/work/scripts/salmon/"
 
-echo "**** create resources number array ****"
-resources_number_array=()
+# FastQCで最初のクオリティチェック
+# fastq file's directory
+files="${RESOURCES_DIR_PATH}/*.fastq.gz"
+# 出力先のディレクトリを作成 
+mkdir -p "${RESULTS_DIR_PATH}fastqc/"
 
-for i in {7..9}
-do
-    resources_number_array+=("00${i}-${i}")
+for file in $files; do
+    fastqc --threads 4 --nogroup -o "${RESULTS_DIR_PATH}fastqc/" $file
 done
-
-for i in {10..12}
-do
-    resources_number_array+=("0${i}-${i}")
-done
-
-echo "**** resources ****"
-echo ${resources_number_array[@]}
 
 # fastpで前処理
 readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
