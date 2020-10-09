@@ -33,11 +33,11 @@ RUN echo "**** install dev packages ****" && \
 # Install fastp, salmon and multiqc
 RUN echo "**** install analysis tools ****" && \
     \
-    conda install -c bioconda -y fastp && \
+    conda install -c bioconda -y fastqc fastp && \
     \
     wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMON_VERSION}/salmon-${SALMON_VERSION}_linux_x86_64.tar.gz -P tools && \
     tar -zxvf tools/salmon-${SALMON_VERSION}_linux_x86_64.tar.gz -C tools && \
-    rm salmon-${SALMON_VERSION}_linux_x86_64.tar.gz && \
+    rm tools/salmon-${SALMON_VERSION}_linux_x86_64.tar.gz && \
     \
     pip install multiqc
 
