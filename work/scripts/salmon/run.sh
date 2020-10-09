@@ -5,16 +5,29 @@ readonly RESULTS_DIR_PATH="/work/results/"
 readonly SCRIPTS_DIR_PATH="/work/scripts/salmon/"
 
 # FastQCで最初のクオリティチェック
-# fastq file's directory
-files="${RESOURCES_DIR_PATH}/*.fastq.gz"
+readonly FASTQC_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastqc/"
+
 # 出力先のディレクトリを作成 
 mkdir -p "${RESULTS_DIR_PATH}fastqc/"
 
+# 出力先ディレクトリがあるかどうかチェック
+if [ -d ${FASTQC_RESULTS_DIR_PATH} ]; then
+    echo "fastp出力用のディレクトリがすでに存在しています。"
+else
+    echo "fastp出力用のディレクトリが存在していないため、作成します。"
+    mkdir -p ${FASTQC_RESULTS_DIR_PATH}
+fi
+
+# fastqファイルを変数に格納
+files="${RESOURCES_DIR_PATH}/*.fastq.gz"
+
 for file in $files; do
-    fastqc --threads 4 --nogroup -o "${RESULTS_DIR_PATH}fastqc/" $file
+    fastqc --threads 4 --nogroup -o $FASTQC_RESULTS_DIR_PATH $file
 done
 
+echo "*****fastqc finished*****"
 
+echo "*****fastp starts*****"
 # fastpで前処理
 readonly FASTP_RESOURCE_DIR_PATH="${RESOURCES_DIR_PATH}fastp_resources/"
 readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
@@ -22,6 +35,14 @@ readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
 # fastqファイルをread1, read2ごとに分けて格納
 files_1="${FASTP_RESOURCE_DIR_PATH}*R1*"
 files_2="${FASTP_RESOURCE_DIR_PATH}*R2*"
+
+# 出力先ディレクトリがあるかどうかチェック、なければ作成
+if [ -d ${FASTP_RESULTS_DIR_PATH} ]; then
+    echo "fastp出力用のディレクトリがすでに存在しています。"
+else
+    echo "fastp出力用のディレクトリが存在していないため、作成します。"
+    mkdir -p ${FASTP_RESULTS_DIR_PATH}
+fi
 
 # ファイルパスを配列として再定義
 read1_paths=()
@@ -54,6 +75,9 @@ for i in $(seq 0 ${iteration}); do
     -h $html -j $json --trim_poly_x -q 20 -l 20 --thread 4
 done
 
+echo "*****fastp finished*****"
+
+echo "*****salmon starts*****"
 # salmonでリードカウント
 readonly SALMON_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}salmon_results/"
 # 出力先ディレクトリがあるかどうかチェック
