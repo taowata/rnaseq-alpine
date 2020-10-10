@@ -12,9 +12,9 @@ mkdir -p "${RESULTS_DIR_PATH}fastqc/"
 
 # 出力先ディレクトリがあるかどうかチェック
 if [ -d ${FASTQC_RESULTS_DIR_PATH} ]; then
-    echo "fastp出力用のディレクトリがすでに存在しています。"
+    echo "fastqc出力用のディレクトリがすでに存在しています。"
 else
-    echo "fastp出力用のディレクトリが存在していないため、作成します。"
+    echo "fastqc出力用のディレクトリが存在していないため、作成します。"
     mkdir -p ${FASTQC_RESULTS_DIR_PATH}
 fi
 
@@ -73,6 +73,7 @@ for i in $(seq 0 ${iteration}); do
 
     fastp -i ${read1_paths[$i]} -I ${read2_paths[$i]} -o $read1_output -O $read2_output \
     -h $html -j $json --trim_poly_x -q 20 -l 20 --thread 4
+    rm ${read1_paths[$i]} ${read2_paths[$i]}
 done
 
 echo "*****fastp finished*****"
