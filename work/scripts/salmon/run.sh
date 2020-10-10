@@ -32,10 +32,6 @@ echo "*****fastp starts*****"
 readonly FASTP_RESOURCE_DIR_PATH="${RESOURCES_DIR_PATH}fastp_resources/"
 readonly FASTP_RESULTS_DIR_PATH="${RESULTS_DIR_PATH}fastp_results/"
 
-# fastqファイルをread1, read2ごとに分けて格納
-files_1="${FASTP_RESOURCE_DIR_PATH}*R1*"
-files_2="${FASTP_RESOURCE_DIR_PATH}*R2*"
-
 # 出力先ディレクトリがあるかどうかチェック、なければ作成
 if [ -d ${FASTP_RESULTS_DIR_PATH} ]; then
     echo "fastp出力用のディレクトリがすでに存在しています。"
@@ -43,6 +39,10 @@ else
     echo "fastp出力用のディレクトリが存在していないため、作成します。"
     mkdir -p ${FASTP_RESULTS_DIR_PATH}
 fi
+
+# fastqファイルをread1, read2ごとに分けて格納
+files_1="${FASTP_RESOURCE_DIR_PATH}*R1*"
+files_2="${FASTP_RESOURCE_DIR_PATH}*R2*"
 
 # ファイルパスを配列として再定義
 read1_paths=()
@@ -92,10 +92,8 @@ fi
 for value in ${resources_number_array[@]}
 do
     echo "**** quantify sample: ${value} ****"
-    salmon quant \
-    -i "${RESOURCES_DIR_PATH}transcripts_index_salmon" \
-    -p 6 \
-    -l A \
+    salmon quant -i "${RESOURCES_DIR_PATH}transcripts_index_salmon" \
+    -p 4 -l A \
     -1 "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R1.fq.gz" \
     -2 "${FASTP_RESULTS_DIR_PATH}fastp_${value}_R2.fq.gz" \
     --validateMappings \
