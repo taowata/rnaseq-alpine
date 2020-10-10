@@ -68,8 +68,8 @@ for i in $(seq 0 ${iteration}); do
     read2_filename=${read2_filepath##*/}
     read2_output=${FASTP_RESULTS_DIR_PATH}${read2_filename/.fastq.gz/_trimmed.fastq.gz}
 
-    html=${FASTP_RESULTS_DIR_PATH}${read1_filename/_R1.fastq.gz/.html}
-    json=${FASTP_RESULTS_DIR_PATH}${read1_filename/_R1.fastq.gz/.json}
+    html=${FASTP_RESULTS_DIR_PATH}${read1_filename/R1.fastq.gz/fastp.html}
+    json=${FASTP_RESULTS_DIR_PATH}${read1_filename/R1.fastq.gz/fastp.json}
 
     fastp -i ${read1_paths[$i]} -I ${read2_paths[$i]} -o $read1_output -O $read2_output \
     -h $html -j $json --trim_poly_x -q 20 -l 20 --thread 4
