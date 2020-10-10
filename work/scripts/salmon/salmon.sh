@@ -37,6 +37,6 @@ for i in $(seq 0 ${iteration}); do
     read2_filepath=${read2_paths[$i]}
 
     salmon quant -i "${RESOURCES_DIR_PATH}transcripts_index_salmon" \
-    -p 4 -l A -1 $read1_filepath -2 $read2_filepath --validateMappings \
+    -p 6 -l A -1 $read1_filepath -2 $read2_filepath --validateMappings \
     -o "${SALMON_RESULTS_DIR_PATH}salmon_output_${i+1}"
 done
